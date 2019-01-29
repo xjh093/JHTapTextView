@@ -28,7 +28,7 @@
 //  SOFTWARE.
 
 #import "JHTapTextView.h"
-
+//!!!!:JHTapTextModel
 @interface JHTapTextModel : NSObject
 @property (nonatomic,    copy) NSString *text;
 @property (nonatomic,  assign) NSRange  range;
@@ -36,7 +36,7 @@
 @end
 @implementation JHTapTextModel @end
 
-
+//!!!!:JHTapTextView
 @interface JHTapTextView()
 @property (nonatomic,  strong) NSMutableArray *textArray;
 @end
@@ -51,9 +51,11 @@
         self.scrollEnabled                     = NO;
         self.textContainerInset                = UIEdgeInsetsZero;
         self.showsVerticalScrollIndicator      = NO;
+        self.showsHorizontalScrollIndicator    = NO;
         self.textContainer.lineFragmentPadding = 0;
         
-        _shouldSizeToFit = YES;
+        _autoHeight = YES;
+        _autoWidth = NO;
         _textArray = @[].mutableCopy;
     }
     return self;
@@ -74,8 +76,21 @@
 - (void)setText:(NSString *)text
 {
     [super setText:text];
-    if (_shouldSizeToFit) {
+    
+    if (_autoWidth && _autoHeight) {
         [self sizeToFit];
+    }
+    else if (_autoHeight) {
+        CGSize size = [self sizeThatFits:self.bounds.size];
+        CGRect frame = self.frame;
+        frame.size.height = size.height;
+        self.frame = frame;
+    }
+    else if (_autoWidth) {
+        CGSize size = [self sizeThatFits:self.bounds.size];
+        CGRect frame = self.frame;
+        frame.size.width = size.width;
+        self.frame = frame;
     }
 }
 
@@ -100,8 +115,11 @@
             if (index >= model.range.location && index < model.range.location + model.range.length) {
                 if (model.textBlock) {
                     model.textBlock(model.text, model.range);
-                    break;
                 }
+                if (_tapDelegate && [_tapDelegate respondsToSelector:@selector(tapTextView:didClickText:range:)]) {
+                    [_tapDelegate tapTextView:self didClickText:model.text range:model.range];
+                }
+                break;
             }
         }
     }
@@ -109,9 +127,9 @@
     return NSNotFound;
 }
 
-- (void)allRangeOftext:(NSString *)text callback:(JHTapTextBlock)callback
+- (void)allRangeOftext:(NSString *)text inText:(NSString *)theText callback:(JHTapTextBlock)callback
 {
-    NSRange range = [self.text rangeOfString:text];
+    NSRange range = [theText rangeOfString:text];
     while (range.location != NSNotFound) {
         
         JHTapTextModel *model = [[JHTapTextModel alloc] init];
@@ -122,21 +140,37 @@
         [_textArray addObject:model];
         
         NSUInteger length = range.location + range.length;
-        range = [self.text rangeOfString:text options:kNilOptions range:NSMakeRange(length, self.text.length - length)];
+        range = [theText rangeOfString:text options:kNilOptions range:NSMakeRange(length, theText.length - length)];
     }
 }
 
-#pragma mark - public
+#pragma mark --- public
 
 - (void)addTapTexts:(NSArray *)texts callback:(JHTapTextBlock)callback
 {
+    NSString *theText = self.text;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         if (texts && callback) {
             for (NSString *text in texts) {
                 if (text.length == 0) {
                     continue;
                 }
-                [self allRangeOftext:text callback:callback];
+                [self allRangeOftext:text inText:theText callback:callback];
+            }
+        }
+    });
+}
+
+- (void)addTapTexts:(NSArray *)texts
+{
+    NSString *theText = self.text;
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        if (texts) {
+            for (NSString *text in texts) {
+                if (text.length == 0) {
+                    continue;
+                }
+                [self allRangeOftext:text inText:theText callback:nil];
             }
         }
     });
@@ -158,6 +192,11 @@
     }
     
     [_textArray removeObjectsInArray:marr];
+}
+
+- (void)removeAllTapText
+{
+    [_textArray removeAllObjects];
 }
 
 @end
