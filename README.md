@@ -43,3 +43,8 @@ Tap TextView，文本点击
 
 ### 2019-01-28
 1.upload.
+
+---
+
+# More detail in Demo :)
+
