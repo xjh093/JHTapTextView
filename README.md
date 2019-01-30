@@ -41,8 +41,12 @@ Tap TextView，文本点击
 ```
 # Logs
 
+### 2019-01-29
+- 1.add demo.
+- 2.add delegate.
+
 ### 2019-01-28
-1.upload.
+- 1.upload.
 
 ---
 
