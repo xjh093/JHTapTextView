@@ -3,6 +3,18 @@ Tap TextView，文本点击
 
 ---
 
+# Version
+Latest release version:
+
+1.1.0
+
+---
+
+# Cocoapods
+pod "JHTapTextView"
+
+---
+
 # What
 
 ![image](https://github.com/xjh093/JHTapTextView/blob/master/image.gif)
