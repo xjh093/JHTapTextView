@@ -57,6 +57,12 @@ typedef void(^JHTapTextBlock)(NSString *text, NSRange range);
 @property (nonatomic,  assign) BOOL  autoWidth;
 
 /**
+ 'nil' is default.
+ Background color of clickable text.
+ */
+@property (nonatomic,  strong) UIColor *highlightedBackgroundColor;
+
+/**
  Use block.
  Call this method before 'setText:'
  */

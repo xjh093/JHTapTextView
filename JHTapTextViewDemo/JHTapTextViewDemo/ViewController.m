@@ -60,7 +60,7 @@
     "【作者】杜牧 【朝代】唐\n"
     "银烛秋光冷画屏，轻罗小扇扑流萤。\n"
     "天阶夜色凉如水，坐看牵牛织女星。\n"
-    "译文😋\n"
+    "译文😋😍\n"
     "在秋夜里烛光映照着画屏，手拿着小罗扇扑打萤火虫。夜色里的石阶清凉如冷水，静坐寝宫凝视牛郎织女星。";
 
     _textView2.okidoki
@@ -69,7 +69,7 @@
     .attributedSubstring(@"织女星",[UIColor blueColor]);
 
     // 最后一个 "织女星" 也能点击
-    [_textView2 addTapTexts:@[@"杜牧",@"唐",@"织女星",@"😋"] callback:^(NSString *text, NSRange range) {
+    [_textView2 addTapTexts:@[@"杜牧",@"唐",@"织女星",@"😋😍"] callback:^(NSString *text, NSRange range) {
         NSString *msg = [NSString stringWithFormat:@"text:%@,range:%@",text,NSStringFromRange(range)];
         kShowMessage(msg)
         NSLog(@"%@",msg);
@@ -77,13 +77,13 @@
     
     
     //=================
-    _textView3.frame = CGRectMake(10, 300, CGRectGetWidth(self.view.frame)-20, 10);
-    _textView3.text = @"双十二，保肾季！点击查看，让你睡得安心~";
+    _textView3.frame = CGRectMake(10, 300, CGRectGetWidth(self.view.frame)-20, 15);
+    _textView3.text = @"双十二，保肾季！点击查看，让你睡得安心~\n哈哈哈😃☺️😇😍";
     _textView3.tapDelegate = self;
     _textView3.okidoki
     .attributedSubstring(@"点击查看",[UIColor cyanColor]);
     
-    [_textView3 addTapTexts:@[@"点击查看"]];
+    [_textView3 addTapTexts:@[@"点击查看",@"😃☺️😇"]];
     
     //=================
     _textView4.frame = CGRectMake(10, 350, CGRectGetWidth(self.view.frame)-20, 10);
@@ -103,6 +103,7 @@
     textView.backgroundColor = [UIColor grayColor];
     textView.font = [UIFont systemFontOfSize:14];
     textView.textAlignment = NSTextAlignmentLeft;
+    textView.highlightedBackgroundColor = [UIColor orangeColor];
     return textView;
 }
 

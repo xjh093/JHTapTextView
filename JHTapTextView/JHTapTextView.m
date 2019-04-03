@@ -33,12 +33,16 @@
 @property (nonatomic,    copy) NSString *text;
 @property (nonatomic,  assign) NSRange  range;
 @property (nonatomic,    copy) JHTapTextBlock textBlock;
+
+@property (nonatomic,  strong) UIColor *color;
+@property (nonatomic,  strong) UIFont *font;
 @end
 @implementation JHTapTextModel @end
 
 //!!!!:JHTapTextView
 @interface JHTapTextView()
 @property (nonatomic,  strong) NSMutableArray *textArray;
+@property (nonatomic,  strong) JHTapTextModel *model;
 @end
 
 @implementation JHTapTextView
@@ -53,6 +57,7 @@
         self.showsVerticalScrollIndicator      = NO;
         self.showsHorizontalScrollIndicator    = NO;
         self.textContainer.lineFragmentPadding = 0;
+        self.selectable                        = NO;
         
         _autoHeight = YES;
         _autoWidth = NO;
@@ -65,12 +70,28 @@
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
-    [self characterIndexAtLocation:[touches.anyObject locationInView:self]];
+    NSUInteger location = [self characterIndexAtLocation:[touches.anyObject locationInView:self]];
+    if (location == NSNotFound) {
+        return [super touchesBegan:touches withEvent:event];
+    }
 }
 
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
-    [self characterIndexAtLocation:[touches.anyObject locationInView:self]];
+    NSUInteger location = [self characterIndexAtLocation:[touches.anyObject locationInView:self]];
+    if (location == NSNotFound) {
+        return [super touchesBegan:touches withEvent:event];
+    }
+}
+
+- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [self shouldCallback];
+}
+
+- (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [self shouldCallback];
 }
 
 - (void)setText:(NSString *)text
@@ -98,8 +119,13 @@
 {
     [super willMoveToSuperview:newSuperview];
     // 64 point offset
-    if (newSuperview.subviews.count == 0) {
-        [newSuperview addSubview:[[UIView alloc] init]];
+    if (newSuperview) {
+        UIView *hoderView = [newSuperview viewWithTag:20190403];
+        if (!hoderView) {
+            hoderView = [[UIView alloc] init];
+            hoderView.tag = 20190403;
+            [newSuperview addSubview:hoderView];
+        }
     }
 }
 
@@ -110,21 +136,43 @@
     NSUInteger index = [self.layoutManager glyphIndexForPoint:point inTextContainer:self.textContainer];
     CGRect rect = [self.layoutManager boundingRectForGlyphRange:NSMakeRange(index, 1) inTextContainer:self.textContainer];
     
+    JHTapTextModel *selectModel = nil;
     if (CGRectContainsPoint(rect, point)) {
         for (JHTapTextModel *model in _textArray) {
             if (index >= model.range.location && index < model.range.location + model.range.length) {
-                if (model.textBlock) {
-                    model.textBlock(model.text, model.range);
-                }
-                if (_tapDelegate && [_tapDelegate respondsToSelector:@selector(tapTextView:didClickText:range:)]) {
-                    [_tapDelegate tapTextView:self didClickText:model.text range:model.range];
-                }
+                selectModel = model;
                 break;
             }
         }
     }
     
+    if (_highlightedBackgroundColor) {
+        [self changeTapTextBackgroundColor:self.backgroundColor type:0];
+    }
+    if (selectModel) {
+        _model = selectModel;
+        if (_highlightedBackgroundColor) {
+            [self changeTapTextBackgroundColor:_highlightedBackgroundColor type:0];
+        }
+    }else{
+        _model = nil;
+    }
+    
     return NSNotFound;
+}
+
+- (void)shouldCallback
+{
+    if (_model.textBlock) {
+        _model.textBlock(_model.text, _model.range);
+    }
+    if (_model && _tapDelegate && [_tapDelegate respondsToSelector:@selector(tapTextView:didClickText:range:)]) {
+        [_tapDelegate tapTextView:self didClickText:_model.text range:_model.range];
+    }
+    if (_highlightedBackgroundColor) {
+        [self changeTapTextBackgroundColor:self.backgroundColor type:1];
+    }
+    _model = nil;
 }
 
 - (void)allRangeOftext:(NSString *)text inText:(NSString *)theText callback:(JHTapTextBlock)callback
@@ -141,6 +189,25 @@
         
         NSUInteger length = range.location + range.length;
         range = [theText rangeOfString:text options:kNilOptions range:NSMakeRange(length, theText.length - length)];
+    }
+}
+
+- (void)changeTapTextBackgroundColor:(UIColor *)bgcolor type:(NSInteger)type
+{
+    if (bgcolor == nil) {
+        bgcolor = [UIColor clearColor];
+    }
+    
+    if (_model) {
+        
+        NSMutableAttributedString *mastring = [[NSMutableAttributedString alloc] initWithAttributedString:self.attributedText?self.attributedText:[[NSAttributedString alloc] initWithString:self.text]];
+        if (type == 0) {
+            [mastring addAttribute:NSBackgroundColorAttributeName value:bgcolor range:_model.range];
+        }else if (type == 1) {
+            [mastring removeAttribute:NSBackgroundColorAttributeName range:_model.range];
+        }
+        
+        self.attributedText = mastring;
     }
 }
 
