@@ -6,7 +6,7 @@ Tap TextView，文本点击
 # Version
 Latest release version:
 
-1.1.0
+[1.1.0](https://github.com/xjh093/JHTapTextView/releases)
 
 ---
 
