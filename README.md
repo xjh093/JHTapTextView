@@ -53,6 +53,10 @@ Latest release version:
 ```
 # Logs
 
+### 2019-04-03
+- 1.fix bug.
+- 2.add tap effect.
+
 ### 2019-01-29
 - 1.add demo.
 - 2.add delegate.
