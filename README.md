@@ -11,7 +11,7 @@ Latest release version:
 ---
 
 # Cocoapods
-pod "JHTapTextView"
+`pod "JHTapTextView"`
 
 ---
 
