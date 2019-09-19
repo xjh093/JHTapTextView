@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name         = 'JHTapTextView'
   s.summary      = 'A subclass of UITextView with text clickable.'
-  s.version      = '1.1.0'
+  s.version      = '1.1.1'
   s.license      = { :type => 'MIT'}
   s.authors      = { 'Haocold' => 'xjh093@126.com' }
   s.homepage     = 'https://github.com/xjh093/JHTapTextView'
