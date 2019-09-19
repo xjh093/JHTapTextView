@@ -6,7 +6,7 @@ Tap TextView，文本点击
 # Version
 Latest release version:
 
-[1.1.0](https://github.com/xjh093/JHTapTextView/releases)
+[1.1.1](https://github.com/xjh093/JHTapTextView/releases)
 
 ---
 
@@ -52,6 +52,9 @@ Latest release version:
     }];
 ```
 # Logs
+
+### 2019-09-19
+- fix note "before setText:" -> "after setText:".
 
 ### 2019-04-03
 - 1.fix bug.
