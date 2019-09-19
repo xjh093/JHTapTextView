@@ -64,13 +64,13 @@ typedef void(^JHTapTextBlock)(NSString *text, NSRange range);
 
 /**
  Use block.
- Call this method before 'setText:'
+ Call this method after 'setText:'
  */
 - (void)addTapTexts:(NSArray *)texts callback:(JHTapTextBlock)callback;
 
 /**
  You should set the 'tapDelegate' when call this method before or after.
- Call this method before 'setText:'
+ Call this method after 'setText:'
  */
 - (void)addTapTexts:(NSArray *)texts;
 
