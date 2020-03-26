@@ -6,7 +6,7 @@ Tap TextView，文本点击
 # Version
 Latest release version:
 
-[1.1.1](https://github.com/xjh093/JHTapTextView/releases)
+[1.2.0](https://github.com/xjh093/JHTapTextView/releases)
 
 ---
 
@@ -50,8 +50,24 @@ Latest release version:
         
         NSLog(@"%@",msg);
     }];
+    
+#pragma mark --- JHTapTextViewDelegate
+- (void)tapTextView:(JHTapTextView *)tapTextView didClickText:(NSString *)text range:(NSRange)range
+{
+    if (text.length) {
+        // your code
+        // 点击了某个文字时
+    }
+    else {
+        // do other things
+        // 未点击指定文字时，处理其他事件
+    }
+}
 ```
 # Logs
+
+### 2020-0326
+- modify delegate method.
 
 ### 2019-09-19
 - fix note "before setText:" -> "after setText:".
