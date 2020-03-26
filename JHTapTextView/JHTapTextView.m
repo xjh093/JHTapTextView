@@ -166,7 +166,7 @@
     if (_model.textBlock) {
         _model.textBlock(_model.text, _model.range);
     }
-    if (_model && _tapDelegate && [_tapDelegate respondsToSelector:@selector(tapTextView:didClickText:range:)]) {
+    if (_tapDelegate && [_tapDelegate respondsToSelector:@selector(tapTextView:didClickText:range:)]) {
         [_tapDelegate tapTextView:self didClickText:_model.text range:_model.range];
     }
     if (_highlightedBackgroundColor) {
