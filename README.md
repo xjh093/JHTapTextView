@@ -54,14 +54,37 @@ Latest release version:
 #pragma mark --- JHTapTextViewDelegate
 - (void)tapTextView:(JHTapTextView *)tapTextView didClickText:(NSString *)text range:(NSRange)range
 {
+    /*
+     在 UITableViewCell 中使用 JHTapTextView 时，滑动列表时，当手指是在 JHTapTextView 内时，会触发这个代理事件
+     可进行如下判断
+     
+     If you use `JHTapTextView` in `UITableViewCell`,When you dragging the `UITableView`,
+     if you finger is in the bounds of `JHTapTextView`, it will invoke this method,
+     so you can do like this:
+    */
+    
     if (text.length) {
         // your code
         // 点击了某个文字时
     }
     else {
-        // do other things
-        // 未点击指定文字时，处理其他事件
+         BOOL flag = self.tableView.isDragging;
+         if (!flag) {
+             // 处理cell点击事件
+             // do something about `UITableViewCell` click
+         }
     }
+}
+
+- (UITableView *)tableView{
+    UIView *tableView = self.superview;
+    while (tableView) {
+        if ([tableView isKindOfClass:[UITableView class]]) {
+            break;
+        }
+        tableView = tableView.superview;
+    }
+    return (UITableView *)tableView;
 }
 ```
 # Logs
