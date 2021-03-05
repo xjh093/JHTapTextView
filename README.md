@@ -17,7 +17,7 @@ Latest release version:
 
 # What
 
-![image](https://github.com/xjh093/JHTapTextView/blob/master/image.gif)
+![image](https://github.com/xjh093/GIF/blob/master/gif/JHTapTextView.gif)
 
 ---
 
@@ -89,7 +89,7 @@ Latest release version:
 ```
 # Logs
 
-### 2020-0326
+### 2020-03-26
 - modify delegate method.
 
 ### 2019-09-19
