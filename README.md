@@ -87,7 +87,14 @@ Latest release version:
     return (UITableView *)tableView;
 }
 ```
+
+
+
+
 # Logs
+
+### 2021-03-17
+- if you add `JHTapTextView` to a `UIScrollView`, and the `UIScrollView` add a `UITapGestureRecognizer`, you should set `tap.cancelsTouchesInView = NO;` to cancel delay. 
 
 ### 2020-03-26
 - modify delegate method.
